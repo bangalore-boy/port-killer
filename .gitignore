@@ -1,0 +1,28 @@
+# Build outputs
+build/
+DerivedData/
+*.app
+*.dSYM
+*.dmg
+
+# Xcode
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.xcarchive
+xcuserdata/
+*.xcscmblueprint
+*.xcworkspace/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Temporary files
+*.swp
+*.lock
+*.tmp
