@@ -32,7 +32,7 @@ A native macOS menu bar application for developers to quickly find and kill proc
 ## Installation
 
 ### Option 1: Download DMG
-Download the latest release from the [Releases](releases) page.
+Download the latest release from the [Releases](https://github.com/bangalore-boy/port-killer/releases) page.
 
 ### Option 2: Build from Source
 
