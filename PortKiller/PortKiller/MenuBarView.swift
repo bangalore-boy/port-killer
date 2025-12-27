@@ -114,6 +114,12 @@ struct MenuBarView: View {
                     .onSubmit {
                         checkCustomPort()
                     }
+                    .onChange(of: customPort) { newValue in
+                        if newValue.isEmpty {
+                            showingCustomPortResult = false
+                            customPortProcess = nil
+                        }
+                    }
                 
                 Button("Check") {
                     checkCustomPort()

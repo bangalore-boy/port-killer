@@ -119,18 +119,16 @@ class PortManager: ObservableObject {
             let processName = String(components[0])
             guard let pid = Int(components[1]) else { continue }
             
-            // Parse port from the NAME column (last column, format: *:PORT or IP:PORT)
-            let nameColumn = String(components.last ?? "")
-            guard let port = extractPort(from: nameColumn) else { continue }
-            
-            // Get command (process name is usually sufficient)
-            let command = processName
+            // Find the NAME column - it contains the port info like "*:3000" or "127.0.0.1:8080"
+            // The NAME column is typically the 9th column (index 8) in lsof output
+            // Format: COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+            guard let port = extractPort(from: line) else { continue }
             
             let process = PortProcess(
                 port: port,
                 pid: pid,
                 processName: processName,
-                command: command
+                command: processName
             )
             
             // Avoid duplicates (same port and PID)
@@ -142,10 +140,15 @@ class PortManager: ObservableObject {
         return result.sorted { $0.port < $1.port }
     }
     
-    private func extractPort(from nameColumn: String) -> Int? {
-        // Format: *:PORT or IP:PORT or [::]:PORT
-        let parts = nameColumn.components(separatedBy: ":")
-        guard let lastPart = parts.last else { return nil }
-        return Int(lastPart)
+    private func extractPort(from line: String) -> Int? {
+        // Look for patterns like *:PORT, IP:PORT, or [::]:PORT followed by (LISTEN)
+        // Example: "TCP *:3000 (LISTEN)" or "TCP 127.0.0.1:8080 (LISTEN)"
+        let pattern = #":(\d+)\s*\(LISTEN\)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []),
+              let match = regex.firstMatch(in: line, options: [], range: NSRange(line.startIndex..., in: line)),
+              let portRange = Range(match.range(at: 1), in: line) else {
+            return nil
+        }
+        return Int(line[portRange])
     }
 }
