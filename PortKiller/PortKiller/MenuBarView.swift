@@ -42,10 +42,10 @@ struct MenuBarView: View {
             Text("Port Killer")
                 .font(.headline)
             Spacer()
-            if portManager.isScanning {
-                ProgressView()
-                    .scaleEffect(0.6)
-            }
+            ProgressView()
+                .scaleEffect(0.6)
+                .frame(width: 16, height: 16)
+                .opacity(portManager.isScanning ? 1 : 0)
         }
         .padding(.bottom, 4)
     }
